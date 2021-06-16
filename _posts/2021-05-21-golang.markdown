@@ -1,0 +1,29 @@
+---
+layout: post
+title:  "读写穿透模式"
+date:   2021-05-21 10:24:00 +0800
+author: Vito
+categories: ["redis","读写穿透模式"]
+---
+## golang语言的特点
+* integraty
+* correctness 
+
+## 一些值得关注的点
+* golang will have type name unexported but fields exported, because of marshalling and unmarshlling
+* not public or private, it defines whether the named thing is accessible to software developers outside the package 
+```
+type Name struct {
+	Name string
+	ID int
+}
+
+type Manager struct {
+	Title string
+	name
+}
+```
+
+## Java与golang区别
+* Java每一个文件就是一个class；而golang每一个文件是一个package，里面可以包含多个struct，interface，实现关系，函数等等
+* Java中存在类的集成，存在一些实际业务代码中不会用到的具体类，或者抽象类，并利用这些class/interface来对其他类进行grouping；golang中，并不是根据class，是什么来进行grouping，而是以行为(behaviors)来进行grouping，所以golang中会定义interface，通过定义具体类的函数来实现对应的interface，并根据类来进行grouping
