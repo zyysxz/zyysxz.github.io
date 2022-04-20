@@ -38,6 +38,19 @@ public class UserServiceImpl implements UserService {
 如上所示，外部调用addOne()方法时，数据库插入操作会产生回滚，但是调用addInfo()时，则不会产生回滚，@Transactional失效，这是为什么呢？
 
 ### 原因
-@Transactional注解，默认是基于spring aop（基于jdk）来进行的aop的，而jdk进行aop的原理，是基于InvocationHandler以及Proxy类来创建原接口的代理类，在Spring @Autowired注入时，实际上注入的是proxy代理类，所以我们从外部调用时，会有aop逻辑被执行到，也就是transaction会生效
+@Transactional注解，默认是基于spring aop（基于jdk）来进行的aop的，而jdk进行aop的原理，是基于InvocationHandler以及Proxy类来创建原接口的代理类，在SpringApplication运行期间，@Autowired注入时，实际上注入的是proxy代理类，所以我们从外部调用时，会有aop逻辑被执行到，也就是transaction会生效
 
 但是在类内部调用时，此时并没有使用proxy来调用方法，也就不会执行aop的切面逻辑，@Transactional所以就会失效了。
+解决方法：
+1.使用AspectJ AOP，其支持编译时织入增强且不需要生成代理类，而jdk包括cglib动态代理都是运行时增强。
+2.实现一个在ContextRefreshedEvent完成后，把所有实现自动代理织入接口BeanSelfProxyAware的Bean，注入到自身的插件，详见《精通Spring4.X-企业应用开发实战》。
+```
+public void onReady() {
+    Map<String, BeanSelfProxyAware> proxyAwareMap = applicationContext.getBeansOfType(BeanSelfProxyAware.class);
+    if (proxyAwareMap != null) {
+        for (BeanSelfProxyAware beanSelfProxyAware : proxyAwareMap.values()) {
+            beanSelfProxyAware.setSelfProxy(beanSelfProxyAware);
+        }
+    }
+}
+```

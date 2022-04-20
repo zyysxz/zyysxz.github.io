@@ -1,0 +1,51 @@
+---
+layout: post
+title:  "Redis实现限流"
+date:   2021-09-13 18:28:00 +0800
+author: Vito
+categories: ["redis","限流"]
+---
+## 概念
+1. redis的事务
+只能保证事务顺序性，并不能提供回滚，如果要保证全部成功，全部失败，则可以使用lua脚本
+2.	pipeline和原生批操作的区别
+* 原生批操作是具有原子性的，是服务端提供的功能
+* pipeline是不具有原子行的，是客户端提供的功能，但是可以搭配multi(),exec()配合使用，达到事务顺序性
+
+
+## Redis实现滑动窗口限流
+可以利用redis multi(), exec(), pipeline来实现 
+```
+public class SimpleRateLimiter {
+    private Jedis jedis;
+
+
+    public SimpleRateLimiter(Jedis jedis) {
+        this.jedis = jedis;
+    }
+
+
+    public boolean isActionAllowed(String userId, String actionKey, int period, int maxCount) {
+        String key = String.format("hist:%s:%s", userId, actionKey);
+        long nowTs = System.currentTimeMillis();
+        Pipeline pipe = jedis.pipelined();
+        pipe.multi();
+        pipe.zadd(key, nowTs, "" + nowTs);
+        pipe.zremrangeByScore(key, 0, nowTs - period * 1000);
+        Response<Long> count = pipe.zcard(key);
+        pipe.expire(key, period + 1);
+        pipe.exec();
+        pipe.close();
+        return count.get() <= maxCount;
+    }
+
+
+    public static void main(String[] args) {
+        Jedis jedis = new Jedis();
+        SimpleRateLimiter limiter = new SimpleRateLimiter(jedis);
+        for(int i = 0; i < 20; i++) {
+            System.out.println(limiter.isActionAllowed("laoqian", "reply", 60, 5));
+        }
+    }
+}
+```
