@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "读写穿透模式"
+title:  "golang与java异同"
 date:   2021-05-21 10:24:00 +0800
 author: Vito
-categories: ["redis","读写穿透模式"]
+categories: ["golang"]
 ---
 ## golang语言的特点
 * integraty
