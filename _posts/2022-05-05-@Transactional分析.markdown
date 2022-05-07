@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Spring @Transactional分析"
-date:   2022-05-15 18:00:00 +0800
+date:   2022-05-05 18:00:00 +0800
 author: Vito
 categories: ["Spring","@Transactional"]
 ---
