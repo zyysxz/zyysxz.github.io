@@ -23,4 +23,31 @@ categories: ["Kafka"]
 2. Consumers will automatically know which partition to read from
 
     **<font color="red">Question</font>** - will a certain consumer be assigned to read from a certain partitions, and remain unchanged until it reboot? If yes, how did these instances be assigned?
+
+    Each consumer within consumer groups reads from exclusive partitions
+    ![consumer group](https://raw.githubusercontent.com/zyysxz/zyysxz.github.io/main/_posts/pictures/Consumer%20group.png)
 3. Serialization and Desirialization type can not be changed during the lifecycle of the topic, if you want to change, create a new topic.
+
+## Consumer Groups and Consumer Offsets
+1. if there are more consumers within one consumer group than partitions, the rest part of consumers will stay inactive. For example, if we have 3 partitions and three instances within one group, apparently, each instance will take over one partition, but if we have 4 instances instead of 3, the fourth instance will not help instance 1 or 2 or 3, while it will stay inactive, you can think about why kafka will have this mechanism.
+2. kafka store offsets of a consumer group, when a consuemr in a group has processed data received from Kafka, it should be periodically commiting the offsets (the Kafka broker will write to consumer_offsets, not the group itself), because consumer instance is a client, if it fails and other instance take over its position, it should continue from the offset that already being processed.
+3. 3 delivery semantics
+    * at least once
+    * at most once
+    * exact once
+
+## Brokers and Topics
+1. Kafka broker structure within a cluster
+![Kafka broker structure](https://raw.githubusercontent.com/zyysxz/zyysxz.github.io/main/_posts/pictures/Consumer%20group.png)
+2. Kafka topic replication factor
+more than 1 in production env, usually 3
+
+
+
+
+
+
+
+
+## Appendix
+Answer 1: if there are two instances to take care of the msgs within one partition, it will be difficult to consume the messages in order.
