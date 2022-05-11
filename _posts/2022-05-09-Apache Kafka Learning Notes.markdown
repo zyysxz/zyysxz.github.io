@@ -38,9 +38,23 @@ categories: ["Kafka"]
 
 ## Brokers and Topics
 1. Kafka broker structure within a cluster
-![Kafka broker structure](https://raw.githubusercontent.com/zyysxz/zyysxz.github.io/main/_posts/pictures/Consumer%20group.png)
+![Kafka broker structure](https://raw.githubusercontent.com/zyysxz/zyysxz.github.io/main/_posts/pictures/broker_structure.png)
 2. Kafka topic replication factor
 more than 1 in production env, usually 3
+3. at any time only one broker can be a leader for  a given partition
+4. Producers can only send data to the broker that is leader of a partition, and the consumer will by default read from the leader of the partition
+5. each partition has one leader and multple ISR(in-sync replica)
+
+## Topic Partition Durability
+1. As a rule, for a replication factor of N, you can permanently lose up to N-1 brokers and still recover your data.
+2. Producer acks parameter
+* ack = 0, will not wait for brokers ack
+* ack = 1, will wait for ack from the broker which have leader of the partition
+* ack = all, will wait for acks from the leader and other ISR(no data loss)
+
+## Zookeeper
+
+
 
 
 
