@@ -1,0 +1,32 @@
+---
+layout: post
+title:  "阅读学习情况总结"
+date:   2022-12-31 18:28:00 +0800
+author: Vito
+categories: ["cs","总结"]
+---
+## 学习计划
+Computer related
+* Kafka Introduction - Udemy
+* Structure and Interpretation of Computer programs
+* 前端学习路径 - 极客时间
+* 左耳听风 - 极客时间
+* 区块链 - 极客时间
+* Unix高级环境编程
+* 深入理解计算机系统
+* 程序员修炼之道 
+* Docker
+
+
+Others
+* 置身事内 - DONE
+* 小家大变样
+* 小家越住越大三部曲 - DONE
+* 东野圭吾小说
+* 人性的弱点
+
+
+Computer Program Language
+* golang
+* javascript
+* python
