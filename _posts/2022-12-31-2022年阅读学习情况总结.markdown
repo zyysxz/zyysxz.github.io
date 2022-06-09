@@ -14,8 +14,9 @@ Computer related
 * 区块链 - 极客时间
 * Unix高级环境编程
 * 深入理解计算机系统
-* 程序员修炼之道 
-* Docker
+* 程序员修炼之道  
+* Docker & Kubernetes容器及调度系统
+* 分布式系统学习 - 左耳听风提供的资料
 
 
 Others
