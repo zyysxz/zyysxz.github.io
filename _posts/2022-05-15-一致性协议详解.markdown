@@ -7,6 +7,17 @@ categories: ["共识算法","一致性","CAP理论"]
 ---
 ## 前沿
 根据CAP理论，CAP理论不可能同时满足，在当前网络分区存在已成现实的情况下，一个优秀的AP协议，成为大家关心的话题，后文会着重分析一下当前比较流行的各种一致性协议，并对其之间的异同进行一些比较
+Consensus - 共识
+Consistency - 一致性
+Coherence - 缓存一致性
+例如Paxos，Raft 就是共识算法，paxos 是一种共识理论，分布式系统是他的场景，一致性是他的目标。
+
+线性一致性Linearizability consistency，也是通常所说的强一致性
+
+顺序一致性 Sequential consistency
+
+因果一致性 Causal consistency
+最终一致性 Eventual consistency
 
 ## Distro协议
 Distro协议是注册中心Nacos社区研发的一种AP协议，具有一下几个特点：
@@ -15,8 +26,19 @@ Distro协议是注册中心Nacos社区研发的一种AP协议，具有一下几�
 
 
 ## ZK协议
+ZK协议只能保证数据的顺序一致性，并不能做到线性一致性
 
 
 ## Raft协议
+ETCD基于Raft算法的优化 - https://www.ideawu.net/blog/archives/1120.html
+Raft有三种保证读线性一致性的方式
+* Log Read - 与Paxos类型，讲Read操作也作为一条普通的日志复制，在应用该日志时将读取的状态反回给客户端
+* Read Index - 插入一个同步点，通过广播确认自己是有效leader后，确定ReadIndex，等commitIndex >= ReadIndex后，返回给客户端，同时，也可以让follower也来处理读请求，需要向Leader获取ReadIndex（也需要确认是有效Leader）
+* Lease Read - 同样是为了确认当前的leader为合法的leader，但是其实通过心跳与时钟来检查自身合法性的。当leader的heartbeat timeout超时时，其需要向所有节点广播心跳消息。设心跳广播前的时间戳为$start$，当leader收到了至少quorum数量的节点的响应时，该leader可以认为其lease的有效期为$[start, start + election \ timeout / clock\ drift\ bound)$。因为如果在$start$时发送的心跳获得了至少quorum数量节点的响应，那么至少要在election timeout后，集群才会选举出新的leader。但是，由于不同节点的cpu时钟可能有不同程度的漂移，这会导致在一个很小的时间窗口内，即使leader认为其持有lease，但集群已经选举出了新的leader。这与Raft选举优化Leader Lease存在同样的问题。因此，一些系统在实现Lease Read时缩小了leader持有lease的时间，选择了一个略小于election timeout的时间，以减小时钟漂移带来的影响。
 
 ## Paxos协议
+
+
+
+## 问题
+Paxos算法能保证数据的强一致性吗？
