@@ -21,11 +21,11 @@
 title: Profiter de la vie!
 email: zyysxz@163.com
 description: >- # this means to ignore newlines until "baseurl:"
-
+  沪ICP备20008278-https://beian.miit.gov.cn/
 baseurl: / # the subpath of your site, e.g. /blog
-url: https://beian.miit.gov.cn/ # the base hostname & protocol for your site, e.g. http://example.com
+url: http://zyysxz.github.io # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: zyysxz  
-github_username:  沪ICP备20008278号
+github_username:  zyysxz
 
 # Build settings
 theme: minima
